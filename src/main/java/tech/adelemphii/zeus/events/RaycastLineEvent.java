@@ -11,6 +11,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 import tech.adelemphii.zeus.Zeus;
+import tech.adelemphii.zeus.objects.ZeusMob;
 import tech.adelemphii.zeus.utility.ParticleUtility;
 
 import java.util.*;
@@ -39,29 +40,43 @@ public class RaycastLineEvent implements Listener {
 
         Location previous = locations.size() > 0 ? locations.get(locations.size() - 1) : null;
 
+        if(plugin.getPlayerPointsManager().getSelectedMobs().containsKey(player.getUniqueId())) {
+            ZeusMob zeusMob = plugin.getPlayerPointsManager().getSelectedMobs().get(player.getUniqueId());
+
+            zeusMob.addWayPoint(interactionPoint);
+
+            locations.add(interactionPoint);
+            if(previous == null) {
+                player.sendMessage(Component.text("Added point to selected mob"));
+            } else {
+                player.sendMessage(Component.text("Added point to selected mob with previous"));
+                startRunnable(player.getUniqueId());
+            }
+            plugin.getPlayerPointsManager().addClickPoints(player.getUniqueId(), locations);
+            return;
+        }
+
         locations.add(interactionPoint);
         if(previous == null) {
-            plugin.getPlayerPointsManager().addClickPoints(player.getUniqueId(), locations);
             player.sendMessage(Component.text("Added point"));
         } else {
             player.sendMessage(Component.text("Added point with previous"));
-            plugin.getPlayerPointsManager().addClickPoints(player.getUniqueId(), locations);
             startRunnable(player.getUniqueId());
         }
+        plugin.getPlayerPointsManager().addClickPoints(player.getUniqueId(), locations);
     }
 
     private void startRunnable(UUID uuid) {
         if(schedulerMap.containsKey(uuid)) return;
 
-        List<Location> locations = plugin.getPlayerPointsManager().getClickPoints().get(uuid);
-
-        if(locations == null) {
-            Bukkit.broadcast(Component.text("How."));
-            return;
-        }
-
         BukkitScheduler scheduler = Bukkit.getScheduler();
         scheduler.runTaskTimer(plugin, () -> {
+            List<Location> locations = plugin.getPlayerPointsManager().getClickPoints().get(uuid);
+
+            if(locations == null) {
+                return;
+            }
+
             Location p = null;
 
             for(Location location : locations) {
@@ -71,8 +86,8 @@ public class RaycastLineEvent implements Listener {
                 }
 
                 ParticleUtility.spawnParticleAlongLine(p, location,
-                        Particle.FLAME,
-                        30, 20, 0, 0, 0, 0, null,
+                        Particle.FIREWORKS_SPARK,
+                        10, 10, 0, 0, 0, 0, null,
                         true, null);
                 p = location;
             }

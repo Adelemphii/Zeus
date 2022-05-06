@@ -1,6 +1,7 @@
 package tech.adelemphii.zeus;
 
 import org.bukkit.Location;
+import tech.adelemphii.zeus.objects.ZeusMob;
 
 import java.util.*;
 
@@ -8,6 +9,8 @@ public class PlayerPointsManager {
 
     private List<UUID> activePlayers = new ArrayList<>();
     private Map<UUID, List<Location>> clickPoints = new HashMap<>();
+
+    private Map<UUID, ZeusMob> selectedMobs = new HashMap<>();
 
     public Map<UUID, List<Location>> getClickPoints() {
         return clickPoints;
@@ -39,5 +42,36 @@ public class PlayerPointsManager {
 
     public boolean removeActivePlayer(UUID uuid) {
         return this.activePlayers.remove(uuid);
+    }
+
+    public Map<UUID, ZeusMob> getSelectedMobs() {
+        return selectedMobs;
+    }
+
+    public void setSelectedMobs(Map<UUID, ZeusMob> selectedMobs) {
+        this.selectedMobs = selectedMobs;
+    }
+
+    public void addSelectedMob(UUID uuid, ZeusMob mob) {
+        selectedMobs.put(uuid, mob);
+    }
+
+    public void removeSelectedMob(UUID uuid) {
+        selectedMobs.remove(uuid);
+    }
+
+    public UUID removeSelectedMob(ZeusMob mob) {
+        UUID uuid = null;
+
+        for(UUID u : selectedMobs.keySet()) {
+            if(selectedMobs.get(u).getMob().getUniqueId().equals(mob.getMob().getUniqueId())) {
+                uuid = u;
+                break;
+            }
+        }
+        if(uuid == null) return null;
+
+        selectedMobs.remove(uuid);
+        return uuid;
     }
 }

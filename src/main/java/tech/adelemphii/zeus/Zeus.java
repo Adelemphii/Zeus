@@ -3,7 +3,7 @@ package tech.adelemphii.zeus;
 import co.aikar.commands.PaperCommandManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import tech.adelemphii.zeus.commands.CommandDev;
-import tech.adelemphii.zeus.events.DrawMobPathEvent;
+import tech.adelemphii.zeus.events.MobSelectionEvent;
 import tech.adelemphii.zeus.events.RaycastLineEvent;
 
 public final class Zeus extends JavaPlugin {
@@ -19,7 +19,7 @@ public final class Zeus extends JavaPlugin {
         manager.registerCommand(new CommandDev(this));
 
         getServer().getPluginManager().registerEvents(new RaycastLineEvent(this), this);
-        getServer().getPluginManager().registerEvents(new DrawMobPathEvent(this), this);
+        getServer().getPluginManager().registerEvents(new MobSelectionEvent(this), this);
 
         playerPointsManager = new PlayerPointsManager();
         plugin = this;

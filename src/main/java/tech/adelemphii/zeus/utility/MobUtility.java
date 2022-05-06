@@ -8,18 +8,15 @@ import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import tech.adelemphii.zeus.Zeus;
+import tech.adelemphii.zeus.objects.ZeusMob;
 
 import java.util.List;
 
 public class MobUtility {
 
-    public static void moveMob(Player player, Mob mob, List<Location> locations) {
+    public static void moveMob(Player player, ZeusMob mob, List<Location> locations) {
         if(locations == null || locations.size() <= 0) {
             Zeus.getInstance().getPlayerPointsManager().addActivePlayer(player.getUniqueId());
-            player.sendMessage(Component.text("Mark some points first with left click"));
-        } else {
-            delayedPath(mob, locations, 40);
-            player.sendMessage(Component.text("Setting path."));
         }
     }
 
