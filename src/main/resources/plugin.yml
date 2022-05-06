@@ -1,4 +1,4 @@
 name: Zeus
 version: '${project.version}'
-main: tech.adeelmphii.zeus.Zeus
+main: tech.adelemphii.zeus.Zeus
 api-version: 1.16
